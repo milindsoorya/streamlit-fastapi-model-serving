@@ -4,6 +4,7 @@ from segmentation import get_segmentator, get_segments
 from starlette.responses import Response
 
 from fastapi import FastAPI, File
+import uvicorn
 
 model = get_segmentator()
 
@@ -22,3 +23,7 @@ def get_segmentation_map(file: bytes = File(...)):
     bytes_io = io.BytesIO()
     segmented_image.save(bytes_io, format="PNG")
     return Response(bytes_io.getvalue(), media_type="image/png")
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

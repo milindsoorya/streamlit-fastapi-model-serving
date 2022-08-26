@@ -7,7 +7,8 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 import streamlit as st
 
 # interact with FastAPI endpoint
-backend = "http://fastapi:8000/segmentation"
+backend = "http://fastapi:8000/server_divnoise"
+
 
 
 def process(image, server_url: str):
@@ -32,18 +33,18 @@ st.write(
 
 input_image = st.file_uploader("insert image")  # image upload widget
 
-if st.button("Get segmentation map"):
+if st.button("Denoise Image"):
 
     col1, col2 = st.columns(2)
 
     if input_image:
-        segments = process(input_image, backend)
+        denoised = process(input_image, backend)
         original_image = Image.open(input_image).convert("RGB")
-        segmented_image = Image.open(io.BytesIO(segments.content)).convert("RGB")
+        denoised_image = Image.open(io.BytesIO(denoised.content)).convert("RGB")
         col1.header("Original")
         col1.image(original_image, use_column_width=True)
-        col2.header("Segmented")
-        col2.image(segmented_image, use_column_width=True)
+        col2.header("Denoised")
+        col2.image(denoised_image, use_column_width=True)
 
     else:
         # handle case with no image
